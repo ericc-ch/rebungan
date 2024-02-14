@@ -1,3 +1,8 @@
+export interface Customer {
+  name: string;
+  avatar: string;
+}
+
 export interface AccountSaving {
   customerName: string;
   currentBalance: number;
@@ -5,16 +10,8 @@ export interface AccountSaving {
   mutations: Array<Mutation>;
 }
 
-export interface AccountCredit {
-  customerName: string;
-  amountPerDay: number;
-  balance: number;
-  startDate: Date;
-  mutations: Array<Mutation>;
-}
-
 export interface Mutation {
   type: "deposit" | "withdraw";
   amount: number;
-  date: Date;
+  mutationDate: number;
 }

@@ -21,11 +21,13 @@ const schema = z.object({
   password: z.string(),
 });
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = (async ({ request }) => {
   const formData = await request.formData();
   const idToken = formData.get("idToken") as string;
 
   const decodedToken = await adminAuth.verifyIdToken(idToken);
+  adminAuth.setCustomUserClaims(decodedToken.uid, { admin: true });
+  (await adminAuth.getUser(decodedToken.uid)).customClaims;
 
   const allowedUsersDocs = await adminFirestore.collection("users").get();
   const allowedUsersIds = allowedUsersDocs.docs.map((doc) => doc.id);
@@ -49,7 +51,7 @@ export const action: ActionFunction = async ({ request }) => {
       "Set-Cookie": await storage.commitSession(session),
     },
   });
-};
+}) satisfies ActionFunction;
 
 export default function Login() {
   const fetcher = useFetcher<
